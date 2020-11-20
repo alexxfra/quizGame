@@ -24,7 +24,18 @@ void Quiz::addQuestion(){
         answers.push_back(buff);
         getline(cin, buff);
     }
-    questionnaire.push_back(Question(prompt, answers, 0));
+
+    cout << "Your answers are :" << endl;
+    for (int i = 0; i < questionnaire.size(); i++){
+        cout << "#" << i+1 << answers[i] << endl;
+    }
+    cout << endl;
+    cout << "Enter number of the correct answer:";
+    do{
+        cin >> ansIndex;
+    }while(ansIndex > questionnaire.size() || ansIndex <= 0);
+
+    questionnaire.push_back(Question(prompt, answers, ansIndex-1));
 }
 
 void Quiz::start(){
