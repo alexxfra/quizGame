@@ -70,10 +70,7 @@ void Quiz::printQs(){
     }
     else{   
         for (int i = 0; i < questionnaire.size(); i++){
-            questionnaire[i].toString();
-            cout << "\n";
+            cout << questionnaire[i] << "\n" << endl;
         }
-        cout << endl;
     }
-    
 }

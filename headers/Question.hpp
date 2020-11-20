@@ -6,6 +6,7 @@
 
 class Question
 {
+    friend std::ostream &operator<<(std::ostream& os, const Question &q);
     private:
         std::string prompt;
         std::vector<std::string> answers;
