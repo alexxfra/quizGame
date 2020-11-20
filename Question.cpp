@@ -10,8 +10,9 @@ Question::Question(const std::string testPrompt, const std::vector<std::string>&
 void Question::toString(){
     cout << prompt << endl;
     for (int i = 0; i < answers.size(); i++){
-        cout << "#" << i+1 << " " << answers[i] << endl;
+        cout << i+1 << ") " << answers[i] << endl;
     }
+    cout << "Correct answer is: " << answers[correctIndex] << endl;
 }
 
 void Question::setPrompt(const std::string newPrompt){
