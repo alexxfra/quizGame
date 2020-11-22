@@ -1,5 +1,8 @@
 #include <iostream>
+#include <iomanip>
 #include <limits>
+#include <random>
+#include <algorithm>
 #include "headers/Quiz.hpp"
 
 //Maybe change to console arguments !!!!  
@@ -24,7 +27,6 @@ void Quiz::addQuestion(){
     vector<string> answers;
     int correctAns;
 
-    cout << "**************************************************" << endl;
     cout << "Please enter the prompt from the question:" << endl;
     getline(cin, prompt);
     
@@ -65,25 +67,34 @@ void Quiz::play(){
         cout << "There are not enough questions in the question pool. Please add more to play." << endl;
     }
     else{
+        cout << "Ahh, so you choose death." << endl;
         int userAns;
         int correctCount = 0;
+        vector <int> usedQs;
+        int index;
+        srand(time(nullptr));
 
         for (int i = 1; i <= QUIZLEN; i++){
-            questionnaire[i-1].toString(cout);
+            do{
+                index = rand() % questionnaire.size();
+            }while(find(usedQs.begin(), usedQs.end(), index) != usedQs.end());
+            questionnaire[index].toString(cout);
+
             cout << "Enter yout answer: ";
             cin >> userAns;
-            while(!cin || userAns <= 0 || userAns > questionnaire[i-1].getAnsCount()){
+            while(!cin || userAns <= 0 || userAns > questionnaire[index].getAnsCount()){
                     cin.clear();
                     cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
                     cout << "please enter a valid option." << endl;
                     cin >> userAns;
             }
-            if(questionnaire[i-1].checkAns(userAns)){
+            if(questionnaire[index].checkAns(userAns-1)){
                 correctCount++;
             }
             cout << endl;
+            usedQs.push_back(index);
         }
-        cout << "Your score is " << correctCount << "/" << QUIZLEN << " points" << endl;
+        cout << "Your score is " << correctCount << "/" << QUIZLEN << " points\n" << endl;
     }
 }
 
@@ -91,8 +102,10 @@ void Quiz::printQs(){
     if(questionnaire.empty()){
         cout << "The questionnaire is empty, thus no questions can be displayed.\n" << endl;
     }
-    else{   
+    else{ 
+        cout << "Questions in the poo:" << endl;
         for (int i = 0; i < questionnaire.size(); i++){
+            cout << setw(2) << i+1 << ") ";
             questionnaire[i].toString(cout);
             cout << endl;
         }
@@ -104,6 +117,7 @@ void Quiz::writeQs(ostream &ofs){
         cout << "The questionnaire is empty, thus no questions are written.\n" << endl;
     }
     else{   
+        cout << "Writing to file\n" << endl;
         for (int i = 0; i < questionnaire.size(); i++){
             ofs << questionnaire[i];
             if(i != questionnaire.size()-1){
@@ -122,35 +136,46 @@ bool Quiz::readQs(std::istream &ifs){
 
     while(!ifs.eof()){
         if(!getline(ifs, prompt)){
-            cout << "Error reading question prompt at question " << questionnaire.size()+1 << endl;
+            cout << "Error reading question prompt at question " << questionnaire.size()+1 << "\n" << endl;
             return false;
         }
 
         if(!(ifs >> ansCount)){
-            cout << "Error reading answer count at question " << questionnaire.size()+1 << endl;
+            cout << "Error reading answer count at question " << questionnaire.size()+1 << "\n" << endl;
             return false;
         }
-        ifs.clear();
         ifs.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
 
         for(int i = 0; i < ansCount; i++){
             if(!getline(ifs, buff)){
-                cout << "Error reading answer " << i+1 <<" at question " << questionnaire.size()+1 << endl;
+                cout << "Error reading answer " << i+1 <<" at question " << questionnaire.size()+1 << "\n" << endl;
                 return false;
             }
             answers.push_back(buff);
         }
 
         if(!(ifs >> correctAns)){
-            cout << "Error reading correct answer index at question " << questionnaire.size()+1 << endl;
+            cout << "Error reading correct answer index at question " << questionnaire.size()+1 << "\n" << endl;
             return false;
         }
-        ifs.clear();
         ifs.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
 
         questionnaire.push_back(Question(prompt, answers, correctAns));
         answers.erase(answers.begin(), answers.end());
     }
+    cout << "File read successfully!\n" << endl;
     return true;
 }
+
+// USING OVERRIDE
+// bool Quiz::readQs(std::istream &ifs){
+//     Question temp;
+
+//     ifs >> temp;
+//     while(!ifs.eof() && !ifs.fail()){
+//         questionnaire.push_back(temp);
+//         ifs >> temp;
+//     }
+//     return true;
+// }
 

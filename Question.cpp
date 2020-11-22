@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <iomanip>
+#include <limits>
 
 using namespace std;
 
@@ -15,7 +16,7 @@ Question::Question(const std::string testPrompt, const std::vector<std::string>&
 void Question::toString(ostream &os){
     os << prompt << endl;
     for (int i = 0; i < answers.size(); i++){
-        os << setw(2) << i+1;
+        os << setw(5) << i+1;
         os << ") " << answers[i] << endl;
     }
     //os << "Correct answer is: " << answers[correctIndex] << endl;
@@ -34,6 +35,28 @@ ostream &operator<<(std::ostream& os, const Question &q){
     os << q.correctIndex;
     return os;
 }
+
+ istream &operator>>(std::istream &ifs, Question &q){
+    string prompt;
+    string buff;
+    vector<string> answers;
+    int correctAns;
+    int ansCount;
+
+    getline(ifs, prompt);    
+    ifs >> ansCount;
+    ifs.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+    for(int i = 0; i < ansCount; i++){
+        getline(ifs, buff);
+        answers.push_back(buff);
+    }
+    ifs >> correctAns;
+    ifs.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+
+    q = Question(prompt, answers, correctAns);
+
+    return ifs;
+ }
 
 int Question::getAnsCount(){
     return ansCount;
