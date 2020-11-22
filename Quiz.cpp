@@ -2,7 +2,9 @@
 #include <limits>
 #include "headers/Quiz.hpp"
 
-#define QSIZE 2
+//Maybe change to console arguments !!!!  
+#define MINANS 2
+#define MAXANS 5
 
 using namespace std;
 
@@ -19,7 +21,7 @@ void Quiz::addQuestion(){
     string prompt;
     string buff;
     vector<string> answers;
-    int ansIndex;
+    int correctAns;
 
     cout << "**************************************************" << endl;
     cout << "Please enter the prompt from the question:" << endl;
@@ -32,30 +34,27 @@ void Quiz::addQuestion(){
             answers.push_back(buff);
             getline(cin, buff);
         }
-        if (answers.size() < QSIZE)
-        {
-            cout << "You need to enter at least " << QSIZE << " alternatives" << endl;
+        if (answers.size() < MINANS || answers.size() > MAXANS){
+            cout << "You need to enter " << MINANS <<" to " << MAXANS << " alternatives" << endl;
             answers.erase(answers.begin(), answers.end());
         }
-    }while(answers.size() < QSIZE);
+    }while(answers.size() < MINANS || answers.size() > MAXANS);
 
     cout << "Your answers are :" << endl;
     for (int i = 0; i < answers.size(); i++){
         cout << i+1 << ") " << answers[i] << endl;
     }
     cout << "Enter number of the correct answer. (1-" << answers.size() << ")" << endl;
-    cin >> ansIndex;
-    if(!cin || ansIndex > answers.size() || ansIndex < 1){
-        do{
+    cin >> correctAns;
+    while(!cin || correctAns > answers.size() || correctAns < 1){
             cin.clear();
             cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
-            cout << "please enter a valid number" << endl;
-            cin >> ansIndex;
-        }while(!cin || ansIndex > answers.size() || ansIndex < 1);
+            cout << "please enter a valid number." << endl;
+            cin >> correctAns;
     }
 
     cout << endl;
-    questionnaire.push_back(Question(prompt, answers, ansIndex-1));
+    questionnaire.push_back(Question(prompt, answers, correctAns-1));
     cin.clear();
     cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
 }
@@ -70,7 +69,61 @@ void Quiz::printQs(){
     }
     else{   
         for (int i = 0; i < questionnaire.size(); i++){
-            cout << questionnaire[i] << "\n" << endl;
+            questionnaire[i].toString(cout);
+            cout << endl;
         }
     }
 }
+
+void Quiz::writeQs(ostream &ofs){
+    if(questionnaire.empty()){
+        cout << "The questionnaire is empty, thus no questions are written.\n" << endl;
+    }
+    else{   
+        for (int i = 0; i < questionnaire.size(); i++){
+            ofs << questionnaire[i];
+        }
+    }
+}
+
+bool Quiz::readQs(std::istream &ifs){
+    string prompt;
+    string buff;
+    vector<string> answers;
+    int correctAns;
+    int ansCount;
+
+    while(!ifs.eof() || !ifs.fail()){
+        if(!getline(ifs, prompt)){
+            cout << "Error reading question prompt at question " << questionnaire.size()+1 << endl;
+            return false;
+        }
+
+        if(!(ifs >> ansCount)){
+            cout << "Error reading answer count at question " << questionnaire.size()+1 << endl;
+            return false;
+        }
+        ifs.clear();
+        ifs.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+
+        for(int i = 0; i < ansCount; i++){
+            if(!getline(ifs, buff)){
+                cout << "Error reading answer " << i+1 <<" at question " << questionnaire.size()+1 << endl;
+                return false;
+            }
+            answers.push_back(buff);
+        }
+
+        if(!(ifs >> correctAns)){
+            cout << "Error reading correct answer index at question " << questionnaire.size()+1 << endl;
+            return false;
+        }
+        ifs.clear();
+        ifs.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+
+        questionnaire.push_back(Question(prompt, answers, correctAns));
+        answers.erase(answers.begin(), answers.end());
+    }
+    return true;
+}
+

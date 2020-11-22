@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <iostream>
 #include "Question.hpp"
 
 class Quiz
@@ -12,4 +13,6 @@ class Quiz
         void addQuestion();
         void start();
         void printQs();
+        void writeQs(std::ostream &ofs);
+        bool readQs(std::istream &ifs);
 };
