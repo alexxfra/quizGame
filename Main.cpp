@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <limits>
 #include "headers/Quiz.hpp"
 #include "headers/Question.hpp"
 
@@ -10,27 +11,33 @@ using namespace std;
 
 int main(){
     Quiz q;
-    vector<string> draft = {"Yes", "No", "Maybe"};
-    string prompt = "Am I a baller ?";
     fstream file;
-
     file.open("output.txt", ios::in);
+    int userInput;
 
-    q.readQs(file);
-    // q.addQuestion();
-    // q.addQuestion();
-    q.printQs();
-    // q.writeQs(file);
-    // q.clear();
-    // q.printQs();
+    cout << "**************************************************" << endl;
+    cout << "Welcome to Alex's \"great\" quiz!" << endl;
 
-    // Question ques(prompt, draft, 0);
+    while(true){
+        cin >> userInput;
+        while(!cin || userInput < 1 || userInput > 6){
+                cin.clear();
+                cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+                cout << "please enter a valid number." << endl;
+                cin >> userInput;
+        }
+        switch (userInput)
+        {
+        case /* constant-expression */:
+            /* code */
+            break;
+        
+        default:
+            break;
+        }
+    }
 
-    // ofstream of;
-    // of.open("output.txt");
-    // of << ques;
-    // of << ques;
-    // ques.toString();
+    
 
     return 0;
 }

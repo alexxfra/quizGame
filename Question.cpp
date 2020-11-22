@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <iomanip>
 
 using namespace std;
 
@@ -14,9 +15,14 @@ Question::Question(const std::string testPrompt, const std::vector<std::string>&
 void Question::toString(ostream &os){
     os << prompt << endl;
     for (int i = 0; i < answers.size(); i++){
-        os << i+1 << ") " << answers[i] << endl;
+        os << setw(2) << i+1;
+        os << ") " << answers[i] << endl;
     }
-    os << "Correct answer is: " << answers[correctIndex] << endl;
+    //os << "Correct answer is: " << answers[correctIndex] << endl;
+}
+
+bool Question::checkAns(const int index){
+    return index == correctIndex;
 }
 
 ostream &operator<<(std::ostream& os, const Question &q){
@@ -25,21 +31,26 @@ ostream &operator<<(std::ostream& os, const Question &q){
     for (int i = 0; i < q.answers.size(); i++){
         os << q.answers[i] << endl;
     }
-    os << q.correctIndex << endl;
+    os << q.correctIndex;
     return os;
 }
+
+int Question::getAnsCount(){
+    return ansCount;
+}
+
 
 /**
  * JUST SETTERS
  */
-void Question::setPrompt(const std::string newPrompt){
-    prompt = newPrompt;
-}
+// void Question::setPrompt(const std::string newPrompt){
+//     prompt = newPrompt;
+// }
 
-void Question::setAnswers(const std::vector<std::string>& newAnswers){
-    answers = newAnswers;
-}
+// void Question::setAnswers(const std::vector<std::string>& newAnswers){
+//     answers = newAnswers;
+// }
 
-void Question::setIndex(const int newIndex){
-    correctIndex = newIndex;
-}
+// void Question::setIndex(const int newIndex){
+//     correctIndex = newIndex;
+// }

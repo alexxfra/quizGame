@@ -5,6 +5,7 @@
 //Maybe change to console arguments !!!!  
 #define MINANS 2
 #define MAXANS 5
+#define QUIZLEN 1
 
 using namespace std;
 
@@ -59,8 +60,31 @@ void Quiz::addQuestion(){
     cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
 }
 
-void Quiz::start(){
+void Quiz::play(){
+    if(questionnaire.size() < QUIZLEN){
+        cout << "There are not enough questions in the question pool. Please add more to play." << endl;
+    }
+    else{
+        int userAns;
+        int correctCount = 0;
 
+        for (int i = 1; i <= QUIZLEN; i++){
+            questionnaire[i-1].toString(cout);
+            cout << "Enter yout answer: ";
+            cin >> userAns;
+            while(!cin || userAns <= 0 || userAns > questionnaire[i-1].getAnsCount()){
+                    cin.clear();
+                    cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+                    cout << "please enter a valid option." << endl;
+                    cin >> userAns;
+            }
+            if(questionnaire[i-1].checkAns(userAns)){
+                correctCount++;
+            }
+            cout << endl;
+        }
+        cout << "Your score is " << correctCount << "/" << QUIZLEN << " points" << endl;
+    }
 }
 
 void Quiz::printQs(){
@@ -82,6 +106,9 @@ void Quiz::writeQs(ostream &ofs){
     else{   
         for (int i = 0; i < questionnaire.size(); i++){
             ofs << questionnaire[i];
+            if(i != questionnaire.size()-1){
+                ofs << endl;
+            }
         }
     }
 }
@@ -93,7 +120,7 @@ bool Quiz::readQs(std::istream &ifs){
     int correctAns;
     int ansCount;
 
-    while(!ifs.eof() || !ifs.fail()){
+    while(!ifs.eof()){
         if(!getline(ifs, prompt)){
             cout << "Error reading question prompt at question " << questionnaire.size()+1 << endl;
             return false;

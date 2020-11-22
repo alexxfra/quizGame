@@ -11,7 +11,7 @@ class Quiz
         Quiz();
         void clear();
         void addQuestion();
-        void start();
+        void play();
         void printQs();
         void writeQs(std::ostream &ofs);
         bool readQs(std::istream &ifs);
