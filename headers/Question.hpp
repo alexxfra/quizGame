@@ -15,7 +15,7 @@ class Question
         int correctIndex;
     public:
         Question(const std::string prompt = "testPrompt", const std::vector<std::string>& ans = std::vector<std::string>(4), const int index = 0);
-        int getAnsCount();
         void toString(std::ostream &os, const int qOffset);
-        bool checkAns(const int index);
+        void toStringReorder(std::ostream &os, const int qOffset);
+        bool ask(const int ansNo);
 };
