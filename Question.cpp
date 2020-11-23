@@ -12,7 +12,9 @@
 
 using namespace std;
 
-Question::Question(const std::string testPrompt, const std::vector<std::string>& ans, const int index) : prompt(testPrompt), answers(ans), correctIndex(index), ansCount(ans.size()){}
+Question::Question(const std::string testPrompt, const std::vector<std::string>& ans, const int index) : prompt(testPrompt), answers(ans), correctIndex(index){
+    this->ansCount = ans.size();
+}
 
 
 /**
@@ -23,7 +25,7 @@ Question::Question(const std::string testPrompt, const std::vector<std::string>&
  */
 void Question::toString(ostream &os, const int qOffset){
     os << prompt << endl;
-    for (int i = 0; i < answers.size(); i++){
+    for (size_t i = 0; i < answers.size(); i++){
         os << setw(qOffset) << i+1;
         os << ") " << answers[i] << endl;
     }
@@ -43,7 +45,7 @@ void Question::toStringReorder(ostream &os, const int qOffset){
     vector<int> usedIs;
     int tempIndex;
     os << prompt << endl;
-    for (int i = 0; i < answers.size(); i++){
+    for (size_t i = 0; i < answers.size(); i++){
          do{
             tempIndex = allAnsRange(mt);
         }while(find(usedIs.begin(), usedIs.end(), tempIndex) != usedIs.end());
@@ -107,7 +109,7 @@ bool Question::ask(const int ansNo){
 ostream &operator<<(std::ostream& os, const Question &q){
     os << q.prompt << endl;
     os << q.ansCount << endl;
-    for (int i = 0; i < q.answers.size(); i++){
+    for (size_t i = 0; i < q.answers.size(); i++){
         os << q.answers[i] << endl;
     }
     os << q.correctIndex;

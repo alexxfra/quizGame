@@ -59,7 +59,7 @@ void Quiz::addQuestion(){
 
     // Displays answers enterd by the user and asks him to select the correct one.
     cout << "Your answers are :" << endl;
-    for (int i = 0; i < answers.size(); i++){
+    for (size_t i = 0; i < answers.size(); i++){
         cout << i+1 << ") " << answers[i] << endl;
     }
     cout << "Enter number of the correct answer. (1-" << answers.size() << ")" << endl;
@@ -80,7 +80,6 @@ void Quiz::play(){
     }
     else{
         cout << "So you have chosen death.\n" << endl;
-        int userAns;
         int correctCount = 0;
         vector <int> usedQs;
         int index;
@@ -113,9 +112,10 @@ void Quiz::printQs(){
     }
     else{ 
         cout << "Questions in the pool:" << endl;
-        for (int i = 0; i < questionnaire.size(); i++){
-            cout << setw(2) << i+1 << ") ";
-            questionnaire[i].toString(cout, 5);
+        int i = 1;
+        for (auto q : questionnaire){
+            cout << setw(2) << i++ << ") ";
+            q.toStringReorder(cout, 5);
             cout << endl;
         }
     }
@@ -133,7 +133,7 @@ bool Quiz::writeQs(ostream &ofs){
     }
     else{   
         cout << "Writing to file\n" << endl;
-        for (int i = 0; i < questionnaire.size(); i++){
+        for (size_t i = 0; i < questionnaire.size(); i++){
             ofs << questionnaire[i];
             if(i != questionnaire.size()-1){
                 ofs << endl;
