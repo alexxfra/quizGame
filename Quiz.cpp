@@ -5,17 +5,26 @@
 #include <algorithm>
 #include "headers/Quiz.hpp"
 
-//Maybe change to console arguments !!!!  
-#define MINANS 2
-#define MAXANS 5
-#define QUIZLEN 1
+// Control constants.
+#define MINANS 2    // Minimum number of answers possible.
+#define MAXANS 5    // Maximum number of answers possible.
+#define QUIZLEN 4   // Number of questions asked during the quiz.
 
 using namespace std;
 
 Quiz::Quiz() : questionnaire(){}
 
+/**
+ * Clears the question pool.
+ */
 void Quiz::clear(){
-    questionnaire.erase(questionnaire.begin(),questionnaire.end());
+    if(questionnaire.empty()){
+        cout << "The question pool is empty. There is nothing to erase.\n" << endl;
+    }
+    else{
+        questionnaire.erase(questionnaire.begin(),questionnaire.end());
+        cout << "The question pool was cleared.\n" << endl; 
+    }
 }
 
 /**
@@ -31,6 +40,10 @@ void Quiz::addQuestion(){
     getline(cin, prompt);
     
     cout << "\n" << "Enter alternative questions, enter \".\" to finish" << endl;
+
+    // This loop reads possible answers until "." is entered.
+    // If the number of answers is outside of the limits defined by MINANS and MAXANS it asks the user
+    // to enter answers again.
     do{
         getline(cin, buff);
         while(buff.compare(".") != 0){
@@ -43,28 +56,26 @@ void Quiz::addQuestion(){
         }
     }while(answers.size() < MINANS || answers.size() > MAXANS);
 
+    // Displays answers enterd by the user and asks him to select the correct one.
     cout << "Your answers are :" << endl;
     for (int i = 0; i < answers.size(); i++){
         cout << i+1 << ") " << answers[i] << endl;
     }
     cout << "Enter number of the correct answer. (1-" << answers.size() << ")" << endl;
-    cin >> correctAns;
-    while(!cin || correctAns > answers.size() || correctAns < 1){
-            cin.clear();
-            cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
-            cout << "please enter a valid number." << endl;
-            cin >> correctAns;
-    }
-
+    readUserInt(cin, correctAns, 1, answers.size());
     cout << endl;
+
+    // Add question to the question pool.
     questionnaire.push_back(Question(prompt, answers, correctAns-1));
-    cin.clear();
-    cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
 }
 
+/**
+ * Asks the user QUIZLEN questions in random order without repeating.
+ * If there are not enough questions in the pool it displays an error.
+ */
 void Quiz::play(){
     if(questionnaire.size() < QUIZLEN){
-        cout << "There are not enough questions in the question pool. Please add more to play." << endl;
+        cout << "There are not enough questions in the question pool. Please add more to play.\n" << endl;
     }
     else{
         cout << "Ahh, so you choose death." << endl;
@@ -74,22 +85,23 @@ void Quiz::play(){
         int index;
         srand(time(nullptr));
 
-        for (int i = 1; i <= QUIZLEN; i++){
+        for (int i = 0; i < QUIZLEN; i++){
+            // Get a random unsued question from the pool.
             do{
                 index = rand() % questionnaire.size();
             }while(find(usedQs.begin(), usedQs.end(), index) != usedQs.end());
-            questionnaire[index].toString(cout);
+            questionnaire[index].toString(cout, 2);
 
             cout << "Enter yout answer: ";
-            cin >> userAns;
-            while(!cin || userAns <= 0 || userAns > questionnaire[index].getAnsCount()){
-                    cin.clear();
-                    cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
-                    cout << "please enter a valid option." << endl;
-                    cin >> userAns;
-            }
+            readUserInt(cin, userAns, 0, questionnaire[index].getAnsCount());
+            
+            // Check if the answer is correct and respond accordingly.
             if(questionnaire[index].checkAns(userAns-1)){
                 correctCount++;
+                cout << "Correct!" << endl;
+            }
+            else{
+                cout << "Incorrect!" << endl;
             }
             cout << endl;
             usedQs.push_back(index);
@@ -98,23 +110,32 @@ void Quiz::play(){
     }
 }
 
+/**
+ * Prints the whole question pool in a readable format.
+ */
 void Quiz::printQs(){
     if(questionnaire.empty()){
         cout << "The questionnaire is empty, thus no questions can be displayed.\n" << endl;
     }
     else{ 
-        cout << "Questions in the poo:" << endl;
+        cout << "Questions in the pool:" << endl;
         for (int i = 0; i < questionnaire.size(); i++){
             cout << setw(2) << i+1 << ") ";
-            questionnaire[i].toString(cout);
+            questionnaire[i].toString(cout, 5);
             cout << endl;
         }
     }
 }
 
-void Quiz::writeQs(ostream &ofs){
+/**
+ * Writes question to the outputstream in a readable format.
+ * @param ofs Output stream to which we write the info.
+ * @return bool value depending on if writing was successful.
+ */
+bool Quiz::writeQs(ostream &ofs){
     if(questionnaire.empty()){
         cout << "The questionnaire is empty, thus no questions are written.\n" << endl;
+        return false;
     }
     else{   
         cout << "Writing to file\n" << endl;
@@ -124,9 +145,15 @@ void Quiz::writeQs(ostream &ofs){
                 ofs << endl;
             }
         }
+        return true;
     }
 }
-
+/**
+ * Read questions from the input stream and display error information describing where the issue was 
+ * encountered so it is easier to locate and correct the incorrect value in the file.
+ * @param ifs Input stream from which we are reading the information.
+ * @return bool value depending on if reading was successful.
+ */
 bool Quiz::readQs(std::istream &ifs){
     string prompt;
     string buff;
@@ -167,7 +194,12 @@ bool Quiz::readQs(std::istream &ifs){
     return true;
 }
 
-// USING OVERRIDE
+// /**
+//  * Function to read questions until an error occurs during reading. 
+//  * Does not print any error information.
+//  * @param ifs Input stream from which we are reading the information.
+//  * @return bool value depending on if reading was successful.
+//  */
 // bool Quiz::readQs(std::istream &ifs){
 //     Question temp;
 
@@ -176,6 +208,38 @@ bool Quiz::readQs(std::istream &ifs){
 //         questionnaire.push_back(temp);
 //         ifs >> temp;
 //     }
-//     return true;
+//     if(ifs)
+//         return true;
+//     else
+//         return false;
 // }
 
+/**
+ * Static function I used for reading and validating user Integer input. 
+ * Contains optional parameters for setting the range of integers which should be accepted.
+ * @param is Input stream from which integers are read.
+ * @param dest Reference to where the integer is stored
+ * @param rangeMin Optional parameter which sets the lower limit of the range.
+ * @param rangeMax Optional parameter which sets the higher limit of the range.
+ */ 
+void Quiz::readUserInt(istream& is, int& dest, int rangeMin, int rangeMax){
+    if(rangeMin == 0 && rangeMax == 0){
+        is >> dest;
+        while(!is){
+                is.clear();
+                is.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+                cout << "please enter a valid number: ";
+                is >> dest;
+        }
+    }
+    else{
+        is >> dest;
+        while(!is || dest < rangeMin || dest > rangeMax){
+                is.clear();
+                is.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+                cout << "please enter a valid number: ";
+                is >> dest;
+        }
+    }
+    is.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+}

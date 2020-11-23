@@ -10,22 +10,32 @@ using namespace std;
 Question::Question(const std::string testPrompt, const std::vector<std::string>& ans, const int index) : prompt(testPrompt), answers(ans), correctIndex(index), ansCount(ans.size()){}
 
 /**
- * Prints question ans answers
- * DONT FORGET TO REMOVE PRITING OF ANSWER. SHOULD NOT BE INCLUDED IN FINAL VERSION.
+ * Prints a formatted Question with it's possible answers.
+ * @param os Output stream where the question is printed.
+ * @param qOffset sets the setw() value of the possible answers to create indentation.
  */
-void Question::toString(ostream &os){
+void Question::toString(ostream &os, const int qOffset){
     os << prompt << endl;
     for (int i = 0; i < answers.size(); i++){
-        os << setw(5) << i+1;
+        os << setw(qOffset) << i+1;
         os << ") " << answers[i] << endl;
     }
-    //os << "Correct answer is: " << answers[correctIndex] << endl;
 }
 
+/**
+ * Checks if the entered index is the index of the correct Answer.
+ * @return True if values match, otherwise False.
+ */
 bool Question::checkAns(const int index){
     return index == correctIndex;
 }
 
+/**
+ * Overloaded << operator for printing questions to an output stream in a format suitable for reading.
+ * @param os Reference to the output stream where the data is printed.
+ * @param q Question object from which the data is extracted.
+ * @return Reference to the used output stream.
+ */
 ostream &operator<<(std::ostream& os, const Question &q){
     os << q.prompt << endl;
     os << q.ansCount << endl;
@@ -35,45 +45,38 @@ ostream &operator<<(std::ostream& os, const Question &q){
     os << q.correctIndex;
     return os;
 }
-
- istream &operator>>(std::istream &ifs, Question &q){
+/**
+ * Overloaded >> operator for reading formatted Question data from a stream.
+ * @param is Reference to the input stream from where the data is read.
+ * @param q Question object to which the read data is saved.
+ * @return Reference to the used Input stream.
+ */
+ istream &operator>>(std::istream &is, Question &q){
     string prompt;
     string buff;
     vector<string> answers;
     int correctAns;
     int ansCount;
 
-    getline(ifs, prompt);    
-    ifs >> ansCount;
-    ifs.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+    getline(is, prompt);    
+    is >> ansCount;
+    is.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
     for(int i = 0; i < ansCount; i++){
-        getline(ifs, buff);
+        getline(is, buff);
         answers.push_back(buff);
     }
-    ifs >> correctAns;
-    ifs.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+    is >> correctAns;
+    is.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
 
     q = Question(prompt, answers, correctAns);
 
-    return ifs;
+    return is;
  }
 
+/**
+ * AnsCount getter.
+ * @return Number of answers to the question.
+ */
 int Question::getAnsCount(){
     return ansCount;
 }
-
-
-/**
- * JUST SETTERS
- */
-// void Question::setPrompt(const std::string newPrompt){
-//     prompt = newPrompt;
-// }
-
-// void Question::setAnswers(const std::vector<std::string>& newAnswers){
-//     answers = newAnswers;
-// }
-
-// void Question::setIndex(const int newIndex){
-//     correctIndex = newIndex;
-// }
