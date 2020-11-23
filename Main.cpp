@@ -15,7 +15,7 @@ int main(int argc, char** argv){
     fstream file;
     string filename;
     int userInput;
-    
+
     cout << "**************************************************" << endl;
     cout << "Welcome to Alex's \"great\" quiz!" << endl;
     cout << "**************************************************" << endl;
@@ -120,6 +120,7 @@ int main(int argc, char** argv){
         
         case 7:
             cout << "Exitting program." << endl;
+            exit(0);
             break;
 
         default:
@@ -145,6 +146,7 @@ void printInfo(){
     cout << "4.) Import questions from a file." << endl;
     cout << "5.) Save questions to a file." << endl;
     cout << "6.) Erase question pool." << endl;
+    cout << "7.) Exit." << endl;
     cout << "**************************************************" << endl;
-    cout << "Choose (1-6): ";
+    cout << "Choose (1-7): ";
 }
