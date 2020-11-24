@@ -9,7 +9,7 @@
 #define QUIZLEN 5           // Number of questions asked during the quiz.
 #define ANSCOUNT 3          // Number of possible answers displayed.
 #define MINANS ANSCOUNT+1   // Minimum number of alternatives.
-#define MAXANS 5            // Maximum number of alternatives.
+#define MAXANS ANSCOUNT+3   // Maximum number of alternatives.
 
 using namespace std;
 
@@ -40,6 +40,10 @@ void Quiz::addQuestion(){
 
     cout << "Please enter the prompt from the question:" << endl;
     getline(cin, prompt);
+    while(prompt.empty()){
+        cout << "You cannot enter an empty prompt." << endl;
+        getline(cin, prompt);
+    }
     
     cout << "\n" << "Enter " << MINANS << " to " << MAXANS << " alternative questions, enter \".\" to finish" << endl;
 
@@ -49,7 +53,12 @@ void Quiz::addQuestion(){
     do{
         getline(cin, buff);
         while(buff.compare(".") != 0){
-            answers.push_back(buff);
+            if (buff.empty()){
+                cout << "You cannot enter an empty prompt." << endl;
+            }
+            else{
+                answers.push_back(buff);
+            }
             getline(cin, buff);
         }
         if (answers.size() < MINANS || answers.size() > MAXANS){
@@ -181,7 +190,7 @@ bool Quiz::readQs(std::istream &ifs){
                 cout <<"The maximum number of possible answers is " << MAXANS << ".\n" << endl;
                 return false;
             }
-            else if(ansCount < MAXANS){
+            else if(ansCount < MINANS){
                 cout << "Error reading answer count at question " << fileQuestionCount << endl;
                 cout <<"You need to include at least " << MINANS << " possible answers.\n" << endl;
                 return false;    
@@ -212,6 +221,7 @@ bool Quiz::readQs(std::istream &ifs){
         }
         answers.erase(answers.begin(), answers.end());
         ++fileQuestionCount;
+        ifs.peek();
     }
     cout << "File read successfully!\n" << endl;
     return true;
