@@ -67,7 +67,7 @@ int main(int argc, char** argv){
             }
 
             // If the file does not exist ask the user if he still wants to create it.
-            // If he does create an empty file.
+            // If he does, create an empty file.
             file.open(filename, ios::in);
             if(!file.is_open()){
                 cout << "File does not exist." << endl;
@@ -114,7 +114,7 @@ int main(int argc, char** argv){
             break;
 
         case 6:
-            // Clearing the question pool.
+            // Clear the question pool.
             q.clear();
             break;
         

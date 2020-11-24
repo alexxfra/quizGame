@@ -6,10 +6,10 @@
 #include "headers/Quiz.hpp"
 
 // Control constants.
-#define MINANS 3         // Minimum number of answers possible.
-#define MAXANS 5         // Maximum number of answers possible.
-#define QUIZLEN 5        // Number of questions asked during the quiz.
-#define ANSCOUNT MINANS  // Number of possible answers displayed 
+#define QUIZLEN 5           // Number of questions asked during the quiz.
+#define ANSCOUNT 3          // Number of possible answers displayed.
+#define MINANS ANSCOUNT+1   // Minimum number of alternatives.
+#define MAXANS 5            // Maximum number of alternatives.
 
 using namespace std;
 
@@ -40,7 +40,7 @@ void Quiz::addQuestion(){
     cout << "Please enter the prompt from the question:" << endl;
     getline(cin, prompt);
     
-    cout << "\n" << "Enter alternative questions, enter \".\" to finish" << endl;
+    cout << "\n" << "Enter " << MINANS << " to " << MAXANS << " alternative questions, enter \".\" to finish" << endl;
 
     // This loop reads possible answers until "." is entered.
     // If the number of answers is outside of the limits defined by MINANS and MAXANS it asks the user
@@ -52,7 +52,7 @@ void Quiz::addQuestion(){
             getline(cin, buff);
         }
         if (answers.size() < MINANS || answers.size() > MAXANS){
-            cout << "You need to enter " << MINANS <<" to " << MAXANS << " alternatives" << endl;
+            cout << "You need to enter " << MINANS <<" to " << MAXANS << " alternatives." << endl;
             answers.erase(answers.begin(), answers.end());
         }
     }while(answers.size() < MINANS || answers.size() > MAXANS);

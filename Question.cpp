@@ -16,7 +16,6 @@ Question::Question(const std::string testPrompt, const std::vector<std::string>&
     this->ansCount = ans.size();
 }
 
-
 /**
  * Prints the question prompt followed by all possible answers  
  * in a format suitable for easy reading.
@@ -54,6 +53,7 @@ void Question::toStringReorder(ostream &os, const int qOffset){
         os << ") " << answers[tempIndex] << endl;
     }
 }
+
 /**
  * Prints the prompt and asks the user to enter an answer.
  * @param ansNo Number of possible answers which should be displayed.
@@ -62,25 +62,31 @@ void Question::toStringReorder(ostream &os, const int qOffset){
 bool Question::ask(const int ansNo){
     random_device rd;
     mt19937 mt(rd());
-    uniform_int_distribution<int> allAnsRange(0, ansCount-1);
-    uniform_int_distribution<int> tempAnsRange(0, ansNo-1);
+    uniform_int_distribution<int> allAnsRange(0, ansCount-1);   // Index range for all alternatives in question
+    uniform_int_distribution<int> tempAnsRange(0, ansNo-1);     // Index range for displayed alternatives
 
+    // The correct answer will be printed on this index
     int answerIndex = tempAnsRange(mt);
+
+    // Variable to store random generated index and a Vector used to store already generated indexes.
     int tempIndex;
     vector<int> usedIs;
 
     cout << prompt << endl;
     for(int i = 0; i < ansNo; i++){
+        // This condition prints the correct answer on the answerIndex otherwise chooses a random non-answer alterantive.
         if(i == answerIndex){
             cout << setw(2) << i+1;
             cout << ") " << answers[correctIndex] << endl;
         }
         else{
+            // Generates a non-answer and not yet used alternative.
             do{
                 tempIndex = allAnsRange(mt);
             }while(find(usedIs.begin(), usedIs.end(), tempIndex) != usedIs.end() || tempIndex == correctIndex);
             cout << setw(2) << i+1;
             cout << ") " << answers[tempIndex] << endl;
+            
             usedIs.push_back(tempIndex);
         }
     }
@@ -98,8 +104,8 @@ bool Question::ask(const int ansNo){
         cout << "Incorrect!" << endl;
         return false;
     }
-
 }
+
 /**
  * Overloaded << operator for printing questions to an output stream in a format suitable for reading.
  * @param os Reference to the output stream where the data is printed.
@@ -115,6 +121,7 @@ ostream &operator<<(std::ostream& os, const Question &q){
     os << q.correctIndex;
     return os;
 }
+
 /**
  * Overloaded >> operator for reading formatted Question data from a stream.
  * @param is Reference to the input stream from where the data is read.
@@ -136,34 +143,8 @@ ostream &operator<<(std::ostream& os, const Question &q){
         answers.push_back(buff);
     }
     is >> correctAns;
-    if(is.peek() == '\n')
-        is.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+    is.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
 
     q = Question(prompt, answers, correctAns);
-
     return is;
  }
-
-
-// reorder();
-//     vector<string> tempPool;
-//     vector<int> usedIs;
-//     int index;
-//     int userAns;
-
-//     for(int i = 0; i < ansNo-1; i++){
-//         do{
-//             index = rand() % answers.size();
-//         }while(find(usedIs.begin(), usedIs.end(), index) != usedIs.end() || index == correctIndex);
-//         usedIs.push_back(index);
-//         tempPool.push_back(answers[index]);
-//     }
-//     index = rand() % (tempPool.size()+1);
-//     tempPool.insert(tempPool.begin() + index, answers[correctIndex]);
-
-
-//     cout << prompt << endl;
-//     for (int i = 0; i < tempPool.size(); i++){
-//         cout << setw(2) << i+1;
-//         cout << ") " << tempPool[i] << endl;
-//     }
