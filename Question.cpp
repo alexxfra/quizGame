@@ -138,7 +138,7 @@ ostream &operator<<(std::ostream& os, const Question &q){
     getline(is, prompt);    
     is >> ansCount;
     is.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
-    for(int i = 0; i < ansCount; i++){
+    for (int i = 0; i < ansCount; i++){
         getline(is, buff);
         answers.push_back(buff);
     }
@@ -147,4 +147,11 @@ ostream &operator<<(std::ostream& os, const Question &q){
 
     q = Question(prompt, answers, correctAns);
     return is;
+ }
+
+ int Question::operator==(const Question &q){
+    if (prompt != q.prompt)
+        return 0;
+    else
+        return 1;
  }

@@ -32,6 +32,7 @@ void Quiz::clear(){
  * Add a question to the questionnaire with prompts for the user.
  */
 void Quiz::addQuestion(){
+    Question temp;
     string prompt;
     string buff;
     vector<string> answers;
@@ -66,8 +67,14 @@ void Quiz::addQuestion(){
     readUserInt(cin, correctAns, 1, answers.size());
     cout << endl;
 
-    // Add question to the question pool.
-    questionnaire.push_back(Question(prompt, answers, correctAns-1));
+    // Add question to the question pool if it is unique.
+    temp = Question(prompt, answers, correctAns-1);
+    if(find(questionnaire.begin(), questionnaire.end(), temp) == questionnaire.end()){
+            questionnaire.push_back(temp);
+        }
+    else{
+        cout << "Question wasn't added because it is already in the pool." << endl;
+    }
 }
 
 /**
@@ -150,30 +157,32 @@ bool Quiz::writeQs(ostream &ofs){
  * @return bool value depending on if reading was successful.
  */
 bool Quiz::readQs(std::istream &ifs){
+    Question temp;
     string prompt;
     string buff;
     vector<string> answers;
     int correctAns;
     int ansCount;
 
+    int fileQuestionCount = 1;
     while(!ifs.eof()){
         if(!getline(ifs, prompt)){
-            cout << "Error reading question prompt at question " << questionnaire.size()+1 << ".\n" << endl;
+            cout << "Error reading question prompt at question " << fileQuestionCount << ".\n" << endl;
             return false;
         }
 
         if(!(ifs >> ansCount)){
-            cout << "Error reading answer count at question " << questionnaire.size()+1 << ".\n" << endl;
+            cout << "Error reading answer count at question " << fileQuestionCount << ".\n" << endl;
             return false;
         }
         else {
             if(ansCount > MAXANS){
-                cout << "Error reading answer count at question " << questionnaire.size()+1 << endl;
+                cout << "Error reading answer count at question " << fileQuestionCount << endl;
                 cout <<"The maximum number of possible answers is " << MAXANS << ".\n" << endl;
                 return false;
             }
             else if(ansCount < MAXANS){
-                cout << "Error reading answer count at question " << questionnaire.size()+1 << endl;
+                cout << "Error reading answer count at question " << fileQuestionCount << endl;
                 cout <<"You need to include at least " << MINANS << " possible answers.\n" << endl;
                 return false;    
             }
@@ -182,20 +191,27 @@ bool Quiz::readQs(std::istream &ifs){
 
         for(int i = 0; i < ansCount; i++){
             if(!getline(ifs, buff)){
-                cout << "Error reading answer " << i+1 <<" at question " << questionnaire.size()+1 << ".\n" << endl;
+                cout << "Error reading answer " << i+1 <<" at question " << fileQuestionCount << ".\n" << endl;
                 return false;
             }
             answers.push_back(buff);
         }
 
         if(!(ifs >> correctAns)){
-            cout << "Error reading correct answer index at question " << questionnaire.size()+1 << ".\n" << endl;
+            cout << "Error reading correct answer index at question " << fileQuestionCount << ".\n" << endl;
             return false;
         }
         ifs.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
 
-        questionnaire.push_back(Question(prompt, answers, correctAns));
+        temp = Question(prompt, answers, correctAns);
+        if(find(questionnaire.begin(), questionnaire.end(), temp) == questionnaire.end()){
+            questionnaire.push_back(temp);
+        }
+        else{
+            cout << "Question " << fileQuestionCount << " is already in the pool. Skipping duplicate." << endl;
+        }
         answers.erase(answers.begin(), answers.end());
+        ++fileQuestionCount;
     }
     cout << "File read successfully!\n" << endl;
     return true;

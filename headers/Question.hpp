@@ -18,4 +18,5 @@ class Question
         void toString(std::ostream &os, const int qOffset);
         void toStringReorder(std::ostream &os, const int qOffset);
         bool ask(const int ansNo);
+        int operator==(const Question &q);
 };
