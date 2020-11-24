@@ -23,7 +23,7 @@ The file used to import questions has to be formatted in a certain way for the p
 * Answer alternatives (one alter native per line)
 * Index of the correct answer \[0,alternative number\)
 
-#### Question file example
+### Question file example
 This sets the question prompt to "Who is the current president of the united states ?" and sets the correct answer to be Joe Biden while providing 3 other alternative answers.
 * Who is the current president of the united states ?
 * 4
