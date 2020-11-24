@@ -12,6 +12,9 @@ quizGame is a simple quiz simulator coded in C++. The User is asked a question a
 7. Exit the game
 
 ### Extra info
+You can start the program and read from a file right away by suppying the filename as an argument
+- for example: ./program filename
+
 By default the program expects 4-5 alternative answers per question and displays 3 of them including the correct answer during the quiz. Those values can be modified in the Quiz.cpp via macros.
 
 Additionally when an error is encountered during the reading of a file the program will stop any further reading but will save the correct input previously read. It will also inform the user about the location of the error in the file.
