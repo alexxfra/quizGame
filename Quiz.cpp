@@ -96,23 +96,16 @@ void Quiz::play(){
     }
     else{
         cout << "So you have chosen death.\n" << endl;
-        int correctCount = 0;
-        vector <int> usedQs;
-        int index;
-
         random_device rd;
         mt19937 mt(rd());
-        uniform_int_distribution<int> qRange(0, questionnaire.size() - 1);
+        shuffle(questionnaire.begin(), questionnaire.end(), mt);
+
+        int correctCount = 0;
 
         for (int i = 0; i < QUIZLEN; i++){
-            do{
-                index = qRange(mt);
-            }while(find(usedQs.begin(), usedQs.end(), index) != usedQs.end());
-
-            if(questionnaire[index].ask(ANSCOUNT)){
+            if(questionnaire[i].ask(ANSCOUNT)){
                 correctCount++;
             }
-            usedQs.push_back(index);
             cout << endl;
         }
         cout << "Your score is " << correctCount << "/" << QUIZLEN << " points\n" << endl;
@@ -209,6 +202,11 @@ bool Quiz::readQs(std::istream &ifs){
         if(!(ifs >> correctAns)){
             cout << "Error reading correct answer index at question " << fileQuestionCount << ".\n" << endl;
             return false;
+        }
+        else if(correctAns < 0 || correctAns >= ansCount){
+            cout << "Error reading answer count at question " << fileQuestionCount << endl;
+            cout <<"The answer index for question " << fileQuestionCount << " has to be in range from 0 to " << ansCount-1 << ".\n" << endl;
+            return false;    
         }
         ifs.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
 

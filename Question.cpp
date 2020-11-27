@@ -83,6 +83,7 @@ bool Question::ask(const int ansNo){
             // Generates a non-answer and not yet used alternative.
             do{
                 tempIndex = allAnsRange(mt);
+                cout << "same" << endl;
             }while(find(usedIs.begin(), usedIs.end(), tempIndex) != usedIs.end() || tempIndex == correctIndex);
             cout << setw(2) << i+1;
             cout << ") " << answers[tempIndex] << endl;
