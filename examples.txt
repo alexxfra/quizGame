@@ -1,0 +1,48 @@
+In which city was I born ?
+5
+Presov
+Kosice
+Bratislava
+Kapusany
+Brno
+0
+How old am I ?
+5
+33
+20
+19
+22
+18
+1
+What is my eye color ?
+5
+Dark green
+Blue
+Dark brown
+Teal
+Hazel
+2
+Which university do I attend ?
+5
+University of Helsinki
+Metropolia UAS
+Haaga Helia
+MUNI
+VUT
+1
+Who is the president of the US ?
+5
+George Bush
+Donald Trump
+Richard Nixon
+Joe Biden
+Alexandra Occasio Coretz
+3
+How many siblings do I have ?
+5
+1 sister
+2 sisters
+1 brother
+2 brothers
+1 sister and 1 brother
+0

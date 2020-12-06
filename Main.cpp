@@ -15,7 +15,7 @@ int main(int argc, char** argv){
     fstream file;
     string filename;
     int userInput;
-
+    
     cout << "**************************************************" << endl;
     cout << "Welcome to Alex's \"great\" quiz!" << endl;
     cout << "**************************************************" << endl;
@@ -119,7 +119,7 @@ int main(int argc, char** argv){
             break;
         
         case 7:
-            cout << "Exitting program." << endl;
+            cout << "Thank you for playing !." << endl;
             exit(0);
             break;
 

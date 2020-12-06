@@ -124,6 +124,7 @@ ostream &operator<<(std::ostream& os, const Question &q){
 
 /**
  * Overloaded >> operator for reading formatted Question data from a stream.
+ * Implemented, but not currently used because we need better input validation.
  * @param is Reference to the input stream from where the data is read.
  * @param q Question object to which the read data is saved.
  * @return Reference to the used Input stream.
