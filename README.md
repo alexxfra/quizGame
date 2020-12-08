@@ -1,4 +1,11 @@
 # quizGame
+### Build instruction
+1. Clone repo into directory of your choosing. (All files will be contained in a directory called quizGame) 
+2. Run g++ *cpp to compile the source code. (You can specify name of the executable using the -o argument)
+3. Run ./execname (filename)
+
+Filename is an optional parameter that loads questions from a file at start.
+
 ### Intro
 quizGame is a simple quiz simulator coded in C++. The User is asked a question and he must provide the correct answer. Beside playing the game the user can choose one of the options in the menu to do different things.
 
