@@ -210,6 +210,7 @@ bool Quiz::readQs(std::istream &ifs){
         }
         ifs.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
 
+        // Check if question is already in the pool.
         temp = Question(prompt, answers, correctAns);
         if(find(questionnaire.begin(), questionnaire.end(), temp) == questionnaire.end()){
             questionnaire.push_back(temp);
