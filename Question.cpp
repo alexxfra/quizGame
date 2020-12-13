@@ -124,7 +124,7 @@ ostream &operator<<(std::ostream& os, const Question &q){
 
 /**
  * Overloaded >> operator for reading formatted Question data from a stream.
- * Implemented, but not currently used because we need better input validation.
+ * !!! Implemented, but not currently used because we need better input validation. !!!
  * @param is Reference to the input stream from where the data is read.
  * @param q Question object to which the read data is saved.
  * @return Reference to the used Input stream.
@@ -151,8 +151,5 @@ ostream &operator<<(std::ostream& os, const Question &q){
  }
 
  int Question::operator==(const Question &q){
-    if (prompt != q.prompt)
-        return 0;
-    else
-        return 1;
+    return prompt == q.prompt;
  }
